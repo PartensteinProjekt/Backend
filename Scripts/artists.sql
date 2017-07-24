@@ -1,0 +1,5 @@
+CREATE TABLE `Artists` (
+	`id`	INTEGER NOT NULL,
+	`name`	INTEGER NOT NULL,
+	PRIMARY KEY(`id`)
+);
