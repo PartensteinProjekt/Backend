@@ -8,8 +8,18 @@
 #include <string>
 #include <exception>
 #include <optional>
-using sql_error = std::optional<std::string>;
+#include <vector>
 
+// typedefs
+using sql_error = std::optional<std::string>;
+using sql_row   = std::vector<std::string>;
+using sql_rows  = std::vector<sql_row>;
+
+// container for sql 'answers'
+struct sql_result {
+    sql_rows rows;
+    sql_error error;
+};
 
 // thrown if the creation/open of a db failed
 class db_creation_error : public std::exception {
@@ -28,7 +38,7 @@ public:
     sql_wrapper(const std::string& name);
     ~sql_wrapper();
 
-    sql_error execute_cmd(const std::string& cmd) const;
+    sql_result execute_cmd(const std::string& cmd) const;
 
 private:
     sqlite3* db_;
