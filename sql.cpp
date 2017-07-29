@@ -1,4 +1,6 @@
+// ----------------------------------------------------------------------------------------------------------------------
 #include <sql.h>
+// ----------------------------------------------------------------------------------------------------------------------
 
 #include <sqlite_wrapper.h>
 
@@ -14,6 +16,7 @@ using std::replace;
 
 #include <fstream>
 using std::ifstream;
+using std::ofstream;
 using std::getline;
 
 // ----------------------------------------------------------------------------------------------------------------------
@@ -64,4 +67,16 @@ vector<string> sql::table_names(const sql_wrapper* db)
         names.push_back(row.front());
     }
     return names;
+}
+
+// ----------------------------------------------------------------------------------------------------------------------
+unique_ptr<sql_wrapper> sql::copy_database(const sql_wrapper* db_to_copy, const string& new_name)
+// ----------------------------------------------------------------------------------------------------------------------
+{
+    /*scope the streams*/ {
+        ifstream src(db_to_copy->name(), std::ios::binary);
+        ofstream dst(new_name,           std::ios::binary);
+        dst << src.rdbuf();
+    }
+    return make_unique<sql_wrapper>(new_name);
 }

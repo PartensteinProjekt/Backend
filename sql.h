@@ -25,7 +25,13 @@ std::unique_ptr<sql_wrapper> create_database(const std::string& db_name, std::in
 std::string file_to_string(const std::string& sql_file_name);
 
 // ----------------------------------------------------------------------------------------------------------------------
-// wrapper for "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;"
+// wrapper for "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;" ~ JSt
 // ----------------------------------------------------------------------------------------------------------------------
 std::vector<std::string> table_names(const sql_wrapper* db);
+
+// ----------------------------------------------------------------------------------------------------------------------
+// use native c++ functions to copy a db file - the file shouldn't be changed in another thread during copying! ~ JSt
+// ----------------------------------------------------------------------------------------------------------------------
+std::unique_ptr<sql_wrapper> copy_database(const sql_wrapper* db_to_copy, const std::string& new_name);
+
 }
