@@ -60,3 +60,10 @@ sql_result sql_wrapper::execute_cmd(const std::string & select_cmd) const
     }
     return { {}, error_msg };
 }
+
+// ------------------------------------------------------------------------------------------
+std::string sql_wrapper::name() const
+// ------------------------------------------------------------------------------------------
+{
+    return name_;
+}

@@ -42,6 +42,7 @@ public:
     sql_wrapper(const sql_wrapper&) = delete;
 
     sql_result execute_cmd(const std::string& cmd) const;
+    std::string name() const;
 
 private:
     sqlite3* db_;
