@@ -1,4 +1,4 @@
-CREATE TABLE `Albums` (
+CREATE TABLE IF NOT EXISTS `Albums` (
 	`id`	INTEGER NOT NULL,
 	`name`	TEXT NOT NULL,
 	`artist_id`	INTEGER NOT NULL,

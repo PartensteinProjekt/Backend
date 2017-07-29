@@ -1,4 +1,4 @@
-CREATE TABLE `Genres` (
+CREATE TABLE IF NOT EXISTS `Genres` (
 	`id`	INTEGER NOT NULL,
 	`name`	TEXT NOT NULL,
 	PRIMARY KEY(`id`)
