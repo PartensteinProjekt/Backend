@@ -38,6 +38,9 @@ public:
     sql_wrapper(const std::string& name);
     ~sql_wrapper();
 
+    sql_wrapper(sql_wrapper&&) = default;
+    sql_wrapper(const sql_wrapper&) = delete;
+
     sql_result execute_cmd(const std::string& cmd) const;
 
 private:
