@@ -35,14 +35,21 @@ struct sqlite3;
 class sql_wrapper {
 public:
 
-    sql_wrapper(const std::string& name);
+    // create or open a sqlite-db
+    // throws 'db_creation_error' if neither is possible
+    sql_wrapper(const std::string& db_name);
+
+    // close db
     ~sql_wrapper();
 
-    sql_wrapper(sql_wrapper&&) = default;
-    sql_wrapper(const sql_wrapper&) = delete;
+    sql_wrapper(sql_wrapper&&)     = default; // allow move semantics
+    sql_wrapper(const sql_wrapper&) = delete; // don't allow copying
 
+    // send sql commands to the connected db
+    // can be used for SELECT, DROP, COUNT ... etc.
     sql_result execute_cmd(const std::string& cmd) const;
-    std::string name() const;
+
+    std::string db_name() const;
 
 private:
     sqlite3* db_;

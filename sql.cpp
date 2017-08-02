@@ -74,7 +74,7 @@ unique_ptr<sql_wrapper> sql::copy_database(const sql_wrapper* db_to_copy, const 
 // ----------------------------------------------------------------------------------------------------------------------
 {
     /*scope the streams*/ {
-        ifstream src(db_to_copy->name(), std::ios::binary);
+        ifstream src(db_to_copy->db_name(), std::ios::binary);
         ofstream dst(new_name,           std::ios::binary);
         dst << src.rdbuf();
     }

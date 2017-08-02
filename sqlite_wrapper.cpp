@@ -48,13 +48,13 @@ sql_wrapper::~sql_wrapper()
 }
 
 // ------------------------------------------------------------------------------------------
-sql_result sql_wrapper::execute_cmd(const std::string & select_cmd) const
+sql_result sql_wrapper::execute_cmd(const std::string & cmd) const
 // ------------------------------------------------------------------------------------------
 {
     sql_result query = {};
-
     char* error_msg = {};
-    auto result = sqlite3_exec(db_, select_cmd.c_str(), callback, &query, &error_msg);
+
+    auto result = sqlite3_exec(db_, cmd.c_str(), callback, &query, &error_msg);
     if (result == SQLITE_OK) {
         return query;
     }
@@ -62,7 +62,7 @@ sql_result sql_wrapper::execute_cmd(const std::string & select_cmd) const
 }
 
 // ------------------------------------------------------------------------------------------
-std::string sql_wrapper::name() const
+std::string sql_wrapper::db_name() const
 // ------------------------------------------------------------------------------------------
 {
     return name_;
