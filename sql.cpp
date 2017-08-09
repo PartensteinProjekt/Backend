@@ -19,6 +19,9 @@ using std::ifstream;
 using std::ofstream;
 using std::getline;
 
+#include <filesystem>
+namespace fs = std::experimental::filesystem;
+
 // ----------------------------------------------------------------------------------------------------------------------
 unique_ptr<sql_wrapper> sql::create_database(const string& db_name, initializer_list<string> table_names, ostream& os)
 // ----------------------------------------------------------------------------------------------------------------------
@@ -34,6 +37,47 @@ unique_ptr<sql_wrapper> sql::create_database(const string& db_name, initializer_
     }
 
     return std::move(db);
+}
+
+// ----------------------------------------------------------------------------------------------------------------------
+vector<string> sql::song_inserts_from_directory(const string& directory_name)
+// ----------------------------------------------------------------------------------------------------------------------
+{
+    fs::path dir{ directory_name };
+    if (!fs::exists(dir)) {
+        return {};
+    }
+
+    std::vector<insert_statement> data;
+
+    for (auto entry : fs::recursive_directory_iterator{ dir }) {
+        const fs::path path{ entry.path() };
+        const fs::file_status status{ fs::status(path) };
+
+        // ignore folders for albums or collections of songs
+        if (fs::is_directory(status)) {
+            continue;
+        }
+
+        const std::string extension = { path.extension().string() };
+        // ignore files without extension completly
+        if (extension.length() == 0) {
+            continue;
+        }
+
+        // check if the extension is a supported music format
+        if (extension != ".mp3" && extension != ".wma") {
+            continue;
+        }
+
+        // file should be a song by now
+        const std::string song_name = path.stem().string();
+
+        const std::string statement = "INSERT INTO Songs VALUES('" + song_name + "', '" + path.string() + "', '" + extension + "');";
+        data.push_back(statement);
+    }
+
+    return data;
 }
 
 // ----------------------------------------------------------------------------------------------------------------------
@@ -75,7 +119,7 @@ unique_ptr<sql_wrapper> sql::copy_database(const sql_wrapper* db_to_copy, const 
 {
     /*scope the streams*/ {
         ifstream src(db_to_copy->db_name(), std::ios::binary);
-        ofstream dst(new_name,           std::ios::binary);
+        ofstream dst(new_name,              std::ios::binary);
         dst << src.rdbuf();
     }
     return make_unique<sql_wrapper>(new_name);
