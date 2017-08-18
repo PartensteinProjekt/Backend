@@ -82,8 +82,9 @@ private:
 class reverse_size_range {
 public:
     reverse_size_range(size_t start = std::numeric_limits<std::size_t>::min(), size_t end = std::numeric_limits<std::size_t>::max())
-        : start_{ start }, end_{ end }  /*empty!*/
+        : start_{ start }, end_{ end }
     {
+        /*empty!*/
     }
 
     reverse_numeric_iterator<size_t> begin() const
@@ -98,4 +99,58 @@ public:
 
 private:
     size_t start_, end_;
+};
+
+
+class cstring_iterator_end {
+    /*empty!*/
+};
+
+
+class cstring_iterator {
+public:
+    explicit cstring_iterator(const char* str) : str_{ str }
+    {
+        /*empty!*/
+    }
+
+    char operator*() const
+    {
+        return *str_;
+    }
+
+    cstring_iterator& operator++()
+    {
+        ++str_;
+        return *this;
+    }
+
+    bool operator != (const cstring_iterator_end) const
+    {
+        return str_ != nullptr && *str_ != '\0';
+    }
+
+private:
+    const char* str_ = nullptr;
+};
+
+class cstring_range {
+public:
+    cstring_range(const char* str) : str_{ str }
+    {
+        /*empty!*/
+    }
+
+    cstring_iterator begin() const
+    {
+        return cstring_iterator{ str_ };
+    }
+
+    cstring_iterator_end end() const
+    {
+        return {};
+    }
+
+private:
+    const char* str_ = nullptr;
 };

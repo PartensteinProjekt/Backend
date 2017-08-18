@@ -27,7 +27,7 @@ std::unique_ptr<sql_wrapper> create_database(const string& db_name, std::initial
 // ----------------------------------------------------------------------------------------------------------------------
 // reads a directory recursive and creates a list of sql-insert statements for songs it finds ~ JSt
 // ----------------------------------------------------------------------------------------------------------------------
-vector<string> song_inserts_from_directory(const string& directory_name);
+vector<insert_statement> song_inserts_from_directory(const string& directory_name);
 
 // ----------------------------------------------------------------------------------------------------------------------
 // read .sql files and return the contents as a single string ~ JSt

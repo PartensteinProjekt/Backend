@@ -29,9 +29,9 @@ unique_ptr<sql_wrapper> sql::create_database(const string& db_name, initializer_
     auto db = make_unique<sql_wrapper>(db_name);
 
     for (auto name : table_names) {
-        auto result = db->execute_cmd(sql::file_to_string(name));
-        if (result.error) {
-            os << "ERROR: " << result.error.value() << '\n';
+        auto [_, error] = db->execute_cmd(sql::file_to_string(name));
+        if (error) {
+            os << "ERROR: " << error.value() << '\n';
             throw std::runtime_error("bad query during 'create_db'");
         }
     }
@@ -40,7 +40,7 @@ unique_ptr<sql_wrapper> sql::create_database(const string& db_name, initializer_
 }
 
 // ----------------------------------------------------------------------------------------------------------------------
-vector<string> sql::song_inserts_from_directory(const string& directory_name)
+vector<sql::insert_statement> sql::song_inserts_from_directory(const string& directory_name)
 // ----------------------------------------------------------------------------------------------------------------------
 {
     fs::path dir{ directory_name };
@@ -73,8 +73,9 @@ vector<string> sql::song_inserts_from_directory(const string& directory_name)
         // file should be a song by now
         const std::string song_name = path.stem().string();
 
-        const std::string statement = "INSERT INTO Songs VALUES('" + song_name + "', '" + path.string() + "', '" + extension + "');";
-        data.push_back(statement);
+        //const std::string statement = "INSERT INTO Songs VALUES('" + song_name + "', '" + path.string() + "', '" + extension + "');";
+        //data.push_back(statement);
+        data.push_back(song_name);
     }
 
     return data;
@@ -100,14 +101,14 @@ string sql::file_to_string(const string& sql_file_name)
 vector<string> sql::table_names(const sql_wrapper* db)
 // ----------------------------------------------------------------------------------------------------------------------
 {
-    auto result = db->execute_cmd("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;");
-    if (result.error) {
+    auto [result, error] = db->execute_cmd("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;");
+    if (error) {
         // LOGGING!
         return {};
     }
 
     vector<string> names{};
-    for (auto row : result.rows) {
+    for (auto row : result) {
         names.push_back(row.front());
     }
     return names;

@@ -16,7 +16,7 @@ using sql_row   = std::vector<std::string>;
 using sql_rows  = std::vector<sql_row>;
 
 // container for sql 'answers'
-struct sql_result {
+struct [[nodiscard]] sql_result {
     sql_rows rows;
     sql_error error;
 };
@@ -32,7 +32,7 @@ public:
 struct sqlite3;
 
 
-class sql_wrapper {
+class [[nodiscard]] sql_wrapper {
 public:
 
     // create or open a sqlite-db

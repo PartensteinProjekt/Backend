@@ -1,6 +1,12 @@
 // --------------------------------------------------------------------------
 #include "shuffle.h"
 // --------------------------------------------------------------------------
+// stl
+#include <random>    // for random_engine
+#include <algorithm> // for std::shuffle
+// non-stl
+#include <range.h>   // for size_range{}
+
 
 // --------------------------------------------------------------------------
 albums shuffle::balanced_shuffle(albums original_playlist)
@@ -37,7 +43,8 @@ albums shuffle::balanced_shuffle(albums original_playlist)
 
     // 5 : column select the virtual playlist table
     album balanced_list {};
-    for (size_t n = 0; n < max_size; ++n) {
+    //for (size_t n = 0; n < max_size; ++n) {
+    for (auto n : size_range{ 0, max_size }) {
         for (auto album : original_playlist) {
             const auto track = album[n];
             if (track) {

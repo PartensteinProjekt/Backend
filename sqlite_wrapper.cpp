@@ -34,7 +34,7 @@ int callback(void* data, int argc, char **argv, char **col_name)
 sql_wrapper::sql_wrapper(const std::string& name) : db_{nullptr}, name_{name}, error_msg_{0}
 // ------------------------------------------------------------------------------------------
 {
-    auto result = sqlite3_open(name.c_str(), &db_);
+    int result = sqlite3_open(name.c_str(), &db_);
     if (db_ == nullptr or result != SQLITE_OK) {
         throw db_creation_error{};
     }
@@ -54,10 +54,10 @@ sql_result sql_wrapper::execute_cmd(const std::string & cmd) const
     sql_result query = {};
     char* error_msg = {};
 
-    auto result = sqlite3_exec(db_, cmd.c_str(), callback, &query, &error_msg);
-    if (result == SQLITE_OK) {
+    if (int result = sqlite3_exec(db_, cmd.c_str(), callback, &query, &error_msg); result == SQLITE_OK) {
         return query;
     }
+
     return { {}, error_msg };
 }
 
